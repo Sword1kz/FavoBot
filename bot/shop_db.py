@@ -1,7 +1,8 @@
+import os
 import psycopg2
 import datetime
 
-DB = os.getenv("postgresql://postgres:bMSqwJuBFAdfsxfqtSDzAjmxGfzbSWZk@postgres.railway.internal:5432/railway")
+DB = os.getenv("DATABASE_URL")
 
 
 def normalize(text: str) -> str:
