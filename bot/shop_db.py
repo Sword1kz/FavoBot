@@ -1,7 +1,7 @@
-import sqlite3
+import psycopg2
 import datetime
 
-DB = "favo.db"
+DB = os.getenv("postgresql://postgres:bMSqwJuBFAdfsxfqtSDzAjmxGfzbSWZk@postgres.railway.internal:5432/railway")
 
 
 def normalize(text: str) -> str:
@@ -21,7 +21,7 @@ def find_shop(name: str):
 
     name_n = normalize(name)
 
-    conn = sqlite3.connect(DB)
+    conn = psycopg2.connect(DB)
     cur = conn.cursor()
 
     cur.execute(
