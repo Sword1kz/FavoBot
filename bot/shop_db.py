@@ -29,7 +29,7 @@ def find_shop(name: str):
         """
         SELECT id, name, normalized
         FROM shops
-        WHERE normalized = ? OR name = ?
+        WHERE normalized = %s OR name = %s
         """,
         (name_n, name.strip()),
     )
@@ -61,7 +61,7 @@ def add_shop(name: str):
     cur.execute(
         """
         INSERT INTO shops (name, normalized, date_added)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
         """,
         (name, name_n, date_added),
     )
@@ -105,4 +105,5 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
+
 
