@@ -55,7 +55,7 @@ def add_shop(name: str):
     name_n = normalize(name)
     date_added = datetime.date.today().isoformat()
 
-    conn = sqlite3.connect(DB)
+    conn = psycopg2.connect(DB)
     cur = conn.cursor()
 
     cur.execute(
@@ -87,7 +87,7 @@ def get_or_create_shop(name: str):
 
 def list_shops():
     """Возвращает список всех магазинов в виде словарей."""
-    conn = sqlite3.connect(DB)
+    conn = psycopg2.connect(DB)
     cur = conn.cursor()
 
     cur.execute(
@@ -105,3 +105,4 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
+
