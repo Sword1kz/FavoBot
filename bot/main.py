@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
 from bot.handlers import router
-from init_db_pg import init_db
+from bot.init_db_pg import init_db
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
