@@ -61,7 +61,7 @@ def add_shop(name: str):
 
     cur.execute(
         """
-        INSERT INTO shops (name, normalized)
+        INSERT INTO shops (name, normalized, date_added)
         VALUES (%s, %s, %s)
         RETURNING id
         """,
@@ -109,4 +109,5 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
+
 
