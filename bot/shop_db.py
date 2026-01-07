@@ -35,6 +35,7 @@ def find_shop(name: str):
     )
 
     row = cur.fetchone()
+    cur.close()
     conn.close()
     return row
 
@@ -60,13 +61,16 @@ def add_shop(name: str):
 
     cur.execute(
         """
-        INSERT INTO shops (name, normalized, date_added)
-        VALUES (%s, %s, %s)
+        INSERT INTO shops (name, normalized)
+        VALUES (%s, %s)
+        RETURNING id
         """,
         (name, name_n, date_added),
     )
 
+    shop_id = cur.fetchone()[0]  # ← ВОТ ОН, РЕАЛЬНЫЙ ID
     conn.commit()
+    
     new_id = cur.lastrowid
     conn.close()
 
@@ -105,5 +109,3 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
-
-
