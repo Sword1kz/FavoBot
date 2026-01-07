@@ -41,10 +41,6 @@ def find_shop(name: str):
 
 
 def add_shop(name: str):
-    """
-    Создаём магазин в таблице shops, если его нет.
-    Возвращает id нового магазина.
-    """
     name = (name or "").strip()
     if not name:
         return None
@@ -68,15 +64,14 @@ def add_shop(name: str):
         (name, name_n, date_added),
     )
 
-    shop_id = cur.fetchone()[0]  # ← ВОТ ОН, РЕАЛЬНЫЙ ID
+    shop_id = cur.fetchone()[0]
     conn.commit()
-    
-    new_id = cur.lastrowid
+
+    cur.close()
     conn.close()
 
-    print(f"📒 [+] Added shop: {name} (id={new_id})")
-    return new_id
-
+    print(f"📒 [+] Added shop: {name} (id={shop_id})")
+    return shop_id
 
 def get_or_create_shop(name: str):
     """
@@ -109,5 +104,6 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
+
 
 
