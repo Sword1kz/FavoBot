@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS shops (
     normalized TEXT NOT NULL UNIQUE,
     variants TEXT,
     active INTEGER DEFAULT 1,
-    data_added,
+    data_added TIMESTAMP DEFAULT now(),
     adress TEXT,
     note TEXT
    
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     id SERIAL PRIMARY KEY,
     order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
     product_id INTEGER REFERENCES products(id),
-    qty_units INTEGER NOT NULL DEFAULT 1
+    qty_units INTEGER NOT NULL DEFAULT 1,
     liters_total NUMERIC(10,2),
     promo_info TEXT,
     comment TEXT
@@ -48,4 +48,5 @@ async def init_db(pool: asyncpg.Pool) -> None:
     async with pool.acquire() as conn:
         await conn.execute(CREATE_TABLES_SQL)
     print("✅ init_db: таблицы проверены/созданы")
+
 
