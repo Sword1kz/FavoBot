@@ -71,6 +71,7 @@ async def handle_start(msg: types.Message):
             "• жать «🧾 Заявка» и оформлять заказ по шагам;\n"
             "• отправлять заявки просто текстом.\n\n"
             "Остальные команды доступны только администратору."
+            "Узнать свой ID  можно командой /whoami.
         )
 
     await msg.answer(text, reply_markup=main_keyboard())
@@ -270,3 +271,4 @@ async def handle_text(msg: types.Message):
     record_order(order_date, items, shop_id=shop_id)
 
     await msg.answer(f"{shop_name} ✓ {len(items)} позиций")
+
