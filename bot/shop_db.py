@@ -20,7 +20,7 @@ def find_shop(name: str):
     if not name:
         return None
 
-    name_n = normalize(name)
+    name_n = normalized(name)
 
     conn = psycopg2.connect(DB)
     cur = conn.cursor()
@@ -49,7 +49,7 @@ def add_shop(name: str):
     if exists:
         return exists[0]
 
-    name_n = normalize(name)
+    name_n = normalized(name)
     date_added = datetime.date.today().isoformat()
 
     conn = psycopg2.connect(DB)
@@ -104,6 +104,7 @@ def list_shops():
         {"id": r[0], "name": r[1], "active": r[2], "date": r[3]}
         for r in rows
     ]
+
 
 
 
