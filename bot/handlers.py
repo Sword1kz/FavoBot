@@ -8,6 +8,8 @@ from bot.shop_db import get_or_create_shop, list_shops
 
 import os
 from dotenv import load_dotenv
+from bot.db_orders import create_order, add_order_item
+
 
 load_dotenv()
 
@@ -71,7 +73,6 @@ async def handle_start(msg: types.Message):
             "• жать «🧾 Заявка» и оформлять заказ по шагам;\n"
             "• отправлять заявки просто текстом.\n\n"
             "Остальные команды доступны только администратору."
-            "Узнать свой ID  можно командой /whoami."
         )
 
     await msg.answer(text, reply_markup=main_keyboard())
@@ -199,6 +200,17 @@ async def handle_form_step(msg: types.Message, state: dict):
             return
 
         items = result.get("items") or []
+    # 1. создаём заказ
+    order_id = create_order(
+        shop_id=shop_id,
+        chat_id=msg.chat.id,
+        message_id=msg.message_id,
+    )
+    # 2. Сохраняем позиции
+    for item in items:
+        add_order_item(order_id, item)
+        
+    # 3. Оставляем старый экспорт
 
         record_order(order_date, items, shop_id=shop_id)
 
@@ -268,8 +280,12 @@ async def handle_text(msg: types.Message):
 
     shop_id = get_or_create_shop(shop_name)
 
+    order_id = create_order(
+        shop_id=shop_id,
+        chat_id=msg.chat.id,
+        message_id=msg.message_id,
+    )
+
     record_order(order_date, items, shop_id=shop_id)
 
     await msg.answer(f"{shop_name} ✓ {len(items)} позиций")
-
-
