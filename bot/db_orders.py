@@ -5,7 +5,7 @@ from bot.product_db import get_or_create_product
 DB = os.getenv("DATABASE_URL")
 
 
-def def create_order(shop_id: int, chat_id: int, message_id: int | None = None, order_date: str | None = None) -> int:
+def create_order(shop_id: int, chat_id: int, message_id: int | None = None, order_date: str | None = None) -> int:
     """
     Создаёт заказ и возвращает order_id
     """
@@ -105,3 +105,4 @@ is_additional = 0 if product_id else 1
     conn.commit()
     cur.close()
     conn.close()
+
