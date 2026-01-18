@@ -49,7 +49,7 @@ def add_order_item(order_id: int, item: dict):
     # считаем итоговые литры
     liter_total = None
     if volume_l is not None:
-    liter_total = Decimal(str(volume_l)) * Decimal(pack_size) * Decimal(qty)
+        liter_total = Decimal(str(volume_l)) * Decimal(pack_size) * Decimal(qty)
 
     # promo/comment
     promo_info = item.get("promo_info") or item.get("promo") or None
@@ -58,7 +58,7 @@ def add_order_item(order_id: int, item: dict):
     # product_id: если парсер не дал — создадим/найдём по имени
     product_id = item.get("product_id")
     if not product_id and name:
-    product_id = get_or_create_product(
+        product_id = get_or_create_product(
         display_name=name,
         volume_l=volume_l,
         pack_size=pack_size,
@@ -105,5 +105,6 @@ def add_order_item(order_id: int, item: dict):
     conn.commit()
     cur.close()
     conn.close()
+
 
 
