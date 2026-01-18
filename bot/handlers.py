@@ -22,7 +22,6 @@ ADMIN_IDS = {
 
 router = Router()
 
-# 👉 сюда впиши свой Telegram user_id и id других админов
 
 CURRENT_ORDER_DATE: dict[int, str] = {}
 
@@ -205,6 +204,7 @@ async def handle_form_step(msg: types.Message, state: dict):
         shop_id=shop_id,
         chat_id=msg.chat.id,
         message_id=msg.message_id,
+        order_date=order_date,
     )
     # 2. Сохраняем позиции
     for item in items:
@@ -284,6 +284,7 @@ async def handle_text(msg: types.Message):
         shop_id=shop_id,
         chat_id=msg.chat.id,
         message_id=msg.message_id,
+        order_date=order_date,
     )
 
     record_order(order_date, items, shop_id=shop_id)
