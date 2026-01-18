@@ -34,30 +34,30 @@ def add_order_item(order_id: int, item: dict):
     Добавляет позицию в order_items.
     item — словарь из parse_message()
     """
-    name = (item.get("name") or item.get("title") or item.get("product") or "").strip()
-raw_text = item.get("raw_text") or name or None
+    name = (item.get("name") or item.get("title") or item.get("product") or "").strip() 
+    raw_text = item.get("raw_text") or name or None
 
-# qty
-qty = int(item.get("qty") or item.get("qty_units") or 1)
+    # qty
+    qty = int(item.get("qty") or item.get("qty_units") or 1)
 
-# pack_size
-pack_size = int(item.get("pack_size") or item.get("pack") or 1)
+    # pack_size
+    pack_size = int(item.get("pack_size") or item.get("pack") or 1)
 
-# volume_l
-volume_l = item.get("volume_l")
+    # volume_l
+    volume_l = item.get("volume_l")
 
-# считаем итоговые литры
-liter_total = None
-if volume_l is not None:
+    # считаем итоговые литры
+    liter_total = None
+    if volume_l is not None:
     liter_total = Decimal(str(volume_l)) * Decimal(pack_size) * Decimal(qty)
 
-# promo/comment
-promo_info = item.get("promo_info") or item.get("promo") or None
-comment = item.get("comment") or None
+    # promo/comment
+    promo_info = item.get("promo_info") or item.get("promo") or None
+    comment = item.get("comment") or None
 
-# product_id: если парсер не дал — создадим/найдём по имени
-product_id = item.get("product_id")
-if not product_id and name:
+    # product_id: если парсер не дал — создадим/найдём по имени
+    product_id = item.get("product_id")
+    if not product_id and name:
     product_id = get_or_create_product(
         display_name=name,
         volume_l=volume_l,
@@ -65,8 +65,8 @@ if not product_id and name:
         promo_type=str(promo_info) if promo_info else None
     )
 
-# is_additional: если всё равно нет product_id — считаем как доп. позицию
-is_additional = 0 if product_id else 1
+    # is_additional: если всё равно нет product_id — считаем как доп. позицию
+    is_additional = 0 if product_id else 1
 
    
     conn = psycopg2.connect(DB)
@@ -105,4 +105,5 @@ is_additional = 0 if product_id else 1
     conn.commit()
     cur.close()
     conn.close()
+
 
