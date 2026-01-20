@@ -41,10 +41,6 @@ def find_shop(name: str):
 
 
 def add_shop(name: str):
-    """
-    Создаём магазин в таблице shops, если его нет.
-    Возвращает id нового магазина.
-    """
     name = (name or "").strip()
     if not name:
         return None
@@ -54,7 +50,6 @@ def add_shop(name: str):
         return exists[0]
 
     name_n = normalize(name)
-    date_added = datetime.date.today().isoformat()
 
     conn = psycopg2.connect(DB)
     cur = conn.cursor()
@@ -65,17 +60,17 @@ def add_shop(name: str):
         VALUES (%s, %s)
         RETURNING id
         """,
-        (name, name_n, date_added),
+        (name, name_n),
     )
 
-    shop_id = cur.fetchone()[0]  # ← ВОТ ОН, РЕАЛЬНЫЙ ID
+    shop_id = cur.fetchone()[0]
     conn.commit()
-    
-    new_id = cur.lastrowid
+    cur.close()
     conn.close()
 
-    print(f"📒 [+] Added shop: {name} (id={new_id})")
-    return new_id
+    print(f"📒 [+] Added shop: {name} (id={shop_id})")
+    return shop_id
+
 
 
 def get_or_create_shop(name: str):

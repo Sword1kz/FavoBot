@@ -184,7 +184,7 @@ async def handle_form_step(msg: types.Message, state: dict):
         )
         return
 
-    # 3 — принимаем позиции
+       # 3 — принимаем позиции
     if step == "items":
         shop_name = state["shop_name"]
         shop_id = state["shop_id"]
@@ -199,19 +199,20 @@ async def handle_form_step(msg: types.Message, state: dict):
             return
 
         items = result.get("items") or []
-    # 1. создаём заказ
-    order_id = create_order(
-        shop_id=shop_id,
-        chat_id=msg.chat.id,
-        message_id=msg.message_id,
-        order_date=order_date,
-    )
-    # 2. Сохраняем позиции
-    for item in items:
-        add_order_item(order_id, item)
-        
-    # 3. Оставляем старый экспорт
 
+        # 1) создаём заказ
+        order_id = create_order(
+            shop_id=shop_id,
+            chat_id=msg.chat.id,
+            message_id=msg.message_id,
+            order_date=order_date,
+        )
+
+        # 2) сохраняем позиции в БД
+        for item in items:
+            add_order_item(order_id, item)
+
+        # 3) старый экспорт (в память) — один раз, не в цикле
         record_order(order_date, items, shop_id=shop_id)
 
         FORM_STATE.pop(user_id, None)
@@ -224,6 +225,7 @@ async def handle_form_step(msg: types.Message, state: dict):
             reply_markup=main_keyboard(),
         )
         return
+
 
 
 # === ОБРАБОТКА ТЕКСТА (кнопки + свободный формат) ===
@@ -274,7 +276,14 @@ async def handle_text(msg: types.Message):
         await msg.answer("⚠ Я не смог понять сообщение как заявку.")
         return
 
-    order_date = result.get("order_date")
+    order_date = CURRENT_ORDER_DATE.get(
+    msg.chat.id,
+    result.get("order_date")
+    )
+
+    if not order_date:
+    order_date = normalize_order_date("")
+    
     shop_name = result.get("shop") or "неизвестный магазин"
     items = result.get("items") or []
 
@@ -287,6 +296,9 @@ async def handle_text(msg: types.Message):
         order_date=order_date,
     )
 
+    for item in items:
+        add_order_item(order_id, item)
+        
     record_order(order_date, items, shop_id=shop_id)
 
     await msg.answer(f"{shop_name} ✓ {len(items)} позиций")
