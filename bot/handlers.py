@@ -282,7 +282,7 @@ async def handle_text(msg: types.Message):
     )
 
     if not order_date:
-    order_date = normalize_order_date("")
+        order_date = normalize_order_date("")
     
     shop_name = result.get("shop") or "неизвестный магазин"
     items = result.get("items") or []
@@ -302,3 +302,4 @@ async def handle_text(msg: types.Message):
     record_order(order_date, items, shop_id=shop_id)
 
     await msg.answer(f"{shop_name} ✓ {len(items)} позиций")
+
